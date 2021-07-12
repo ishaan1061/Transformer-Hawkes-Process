@@ -11,14 +11,14 @@ class EventData(torch.utils.data.Dataset):
     def __init__(self, data):
         """
         Data should be a list of event streams; each event stream is a list of dictionaries;
-        each dictionary contains: time_since_start, time_since_last_event, type_event, embedding_senetnce
+        each dictionary contains: time_since_start, time_since_last_event, type_event, embedding_sentence
         """
         self.time = [[elem['time_since_start'] for elem in inst] for inst in data]
         self.time_gap = [[elem['time_since_last_event'] for elem in inst] for inst in data]
         # plus 1 since there could be event type 0, but we use 0 as padding
         self.event_type = [[elem['type_event'] + 1 for elem in inst] for inst in data]
         
-        self.sentence_embedding = [[elem['embedding_senetnce'] for elem in inst] for inst in data]
+        self.sentence_embedding = [[elem['embedding_sentence'] for elem in inst] for inst in data]
 
         self.length = len(data)
 
@@ -50,7 +50,7 @@ def pad_embedding(insts):
         inst + [padding] * (max_len - len(inst))
         for inst in insts])
 
-    return torch.tensor(batch_seq, dtype=torch.long)
+    return torch.tensor(batch_seq, dtype=torch.float32)
     
 
 def pad_type(insts):
