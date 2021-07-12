@@ -54,7 +54,7 @@ def train_epoch(model, training_data, optimizer, pred_loss_func, opt):
         """ forward """
         optimizer.zero_grad()
 
-        enc_out, prediction = model(event_type, event_time)
+        enc_out, prediction = model(event_type, event_time, sentence_embedding)
 
         """ backward """
         # negative log-likelihood
@@ -104,7 +104,7 @@ def eval_epoch(model, validation_data, pred_loss_func, opt):
             event_time, time_gap, event_type, sentence_embedding = map(lambda x: x.to(opt.device), batch)
 
             """ forward """
-            enc_out, prediction = model(event_type, event_time)
+            enc_out, prediction = model(event_type, event_time, sentence_embedding)
 
             """ compute loss """
             event_ll, non_event_ll = Utils.log_likelihood(model, enc_out, event_time, event_type)
