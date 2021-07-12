@@ -81,9 +81,11 @@ class Encoder(nn.Module):
 
         tem_enc = self.temporal_enc(event_time, non_pad_mask)
         enc_output = self.event_emb(event_type)
+        
+        special_parameter=1
 
         for enc_layer in self.layer_stack:
-            enc_output = enc_output + tem_enc + sentence_embedding
+            enc_output = enc_output + tem_enc + special_parameter*sentence_embedding
             enc_output, _ = enc_layer(
                 enc_output,
                 non_pad_mask=non_pad_mask,
