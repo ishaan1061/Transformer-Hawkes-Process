@@ -69,7 +69,7 @@ class Encoder(nn.Module):
         result[:, :, 1::2] = torch.cos(result[:, :, 1::2])
         return result * non_pad_mask
 
-    def forward(self, event_type, event_time, non_pad_mask):
+    def forward(self, event_type, event_time, sentence_embedding, non_pad_mask):
         """ Encode event sequences via masked self-attention. """
 
         # prepare attention masks
@@ -83,7 +83,7 @@ class Encoder(nn.Module):
         enc_output = self.event_emb(event_type)
 
         for enc_layer in self.layer_stack:
-            enc_output += tem_enc
+            enc_output = enc_output + tem_enc + sentence_embedding
             enc_output, _ = enc_layer(
                 enc_output,
                 non_pad_mask=non_pad_mask,
@@ -169,7 +169,7 @@ class Transformer(nn.Module):
         # prediction of next event type
         self.type_predictor = Predictor(d_model, num_types)
 
-    def forward(self, event_type, event_time):
+    def forward(self, event_type, event_time, sentence_embedding):
         """
         Return the hidden representations and predictions.
         For a sequence (l_1, l_2, ..., l_N), we predict (l_2, ..., l_N, l_{N+1}).
@@ -182,7 +182,7 @@ class Transformer(nn.Module):
 
         non_pad_mask = get_non_pad_mask(event_type)
 
-        enc_output = self.encoder(event_type, event_time, non_pad_mask)
+        enc_output = self.encoder(event_type, event_time, sentence_embedding, non_pad_mask)
         enc_output = self.rnn(enc_output, non_pad_mask)
 
         time_prediction = self.time_predictor(enc_output, non_pad_mask)
