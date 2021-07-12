@@ -44,8 +44,8 @@ def pad_time(insts):
 def pad_embedding(insts):
     """ Pad the instance to the max seq length in batch. """
     max_len = max(len(inst) for inst in insts)
-    padding = np.zeros(384)
-    
+    padd = np.zeros(384)
+    padding = padd.tolist()
     batch_seq = np.array([
         inst + [padding] * (max_len - len(inst))
         for inst in insts])
