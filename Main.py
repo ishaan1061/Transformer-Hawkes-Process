@@ -49,7 +49,7 @@ def train_epoch(model, training_data, optimizer, pred_loss_func, opt):
     for batch in tqdm(training_data, mininterval=2,
                       desc='  - (Training)   ', leave=False):
         """ prepare data """
-        event_time, time_gap, event_type = map(lambda x: x.to(opt.device), batch)
+        event_time, time_gap, event_type, sentence_embedding = map(lambda x: x.to(opt.device), batch)
 
         """ forward """
         optimizer.zero_grad()
@@ -101,7 +101,7 @@ def eval_epoch(model, validation_data, pred_loss_func, opt):
         for batch in tqdm(validation_data, mininterval=2,
                           desc='  - (Validation) ', leave=False):
             """ prepare data """
-            event_time, time_gap, event_type = map(lambda x: x.to(opt.device), batch)
+            event_time, time_gap, event_type, sentence_embedding = map(lambda x: x.to(opt.device), batch)
 
             """ forward """
             enc_out, prediction = model(event_type, event_time)
