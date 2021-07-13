@@ -16,7 +16,7 @@ class EventData(torch.utils.data.Dataset):
         self.time = [[elem['time_since_start'] for elem in inst] for inst in data]
         self.time_gap = [[elem['time_since_last_event'] for elem in inst] for inst in data]
         # plus 1 since there could be event type 0, but we use 0 as padding
-        self.event_type = [[elem['type_event'] + 1 for elem in inst] for inst in data]
+        self.event_type = [[elem['type_event'] for elem in inst] for inst in data]
         
         self.sentence_embedding = [[elem['embedding_sentence'] for elem in inst] for inst in data]
 
